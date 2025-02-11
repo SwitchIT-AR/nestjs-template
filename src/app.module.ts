@@ -2,10 +2,13 @@ import { MikroOrmModule } from '@mikro-orm/nestjs';
 import { PostgreSqlDriver } from '@mikro-orm/postgresql';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import * as path from 'node:path';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ cache: true }),
+    ServeStaticModule.forRoot({ rootPath: path.resolve('public') }),
     MikroOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
