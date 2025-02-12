@@ -31,8 +31,10 @@
     "@nestjs/core": "^11.0.9",
     "@nestjs/platform-express": "^11.0.9",
     "@nestjs/serve-static": "^5.0.2",
+    "argon2": "^0.41.1",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
+    "uuid": "^11.0.5",
     "zod": "^3.24.2"
   },
   "devDependencies": {
@@ -76,7 +78,8 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "@nestjs/core"
+      "@nestjs/core",
+      "argon2"
     ]
   }
 }
