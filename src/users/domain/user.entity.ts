@@ -10,7 +10,7 @@ export class User {
   @Property({ type: 'text', unique: true })
   readonly username: string;
 
-  @Property({ type: 'text' })
+  @Property({ type: 'text', hidden: true })
   readonly passwordHash: string;
 
   private constructor(props: UserProps) {
