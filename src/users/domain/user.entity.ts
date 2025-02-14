@@ -8,10 +8,10 @@ export class User {
   readonly id: string = uuid.v7();
 
   @Property({ type: 'text', unique: true })
-  readonly username: string;
+  username: string;
 
   @Property({ type: 'text', hidden: true })
-  readonly passwordHash: string;
+  passwordHash: string;
 
   private constructor(props: UserProps) {
     this.username = props.username;
@@ -27,6 +27,14 @@ export class User {
 
   async verifyPassword(password: string) {
     return argon2.verify(this.passwordHash, password);
+  }
+
+  async setUsername(username: string) {
+    this.username = username;
+  }
+
+  async setPassword(password: string) {
+    this.passwordHash = await argon2.hash(password);
   }
 }
 
