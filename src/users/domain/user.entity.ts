@@ -1,9 +1,10 @@
 import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 import * as argon2 from 'argon2';
 import * as uuid from 'uuid';
+import { TimestampedEntity } from '../../common/timestamped-entity.entity';
 
 @Entity({ tableName: 'users' })
-export class User {
+export class User extends TimestampedEntity {
   @PrimaryKey({ type: 'uuid' })
   readonly id: string = uuid.v7();
 
@@ -14,6 +15,7 @@ export class User {
   passwordHash: string;
 
   private constructor(props: UserProps) {
+    super();
     this.username = props.username;
     this.passwordHash = props.passwordHash;
   }
