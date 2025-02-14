@@ -9,6 +9,7 @@ import {
   NotFoundException,
   OnApplicationBootstrap,
 } from '@nestjs/common';
+import { PaginationOptions } from '../common/pagination-options.schema';
 import { User } from './domain/user.entity';
 import { NewPassword } from './schemas/new-password.schema';
 import { NewUser } from './schemas/new-user.schema';
@@ -38,6 +39,15 @@ export class UsersService implements OnApplicationBootstrap {
         throw new ConflictException('Username already in use');
       throw err;
     }
+  }
+
+  async listUsers(opts: PaginationOptions) {
+    const [items, total] = await this.em.findAndCount(
+      User,
+      {},
+      { orderBy: { username: 'asc' }, offset: opts.offset, limit: opts.limit },
+    );
+    return { total, items };
   }
 
   async changeUsername(userId: string, data: NewUsername) {

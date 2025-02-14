@@ -1,4 +1,16 @@
-import { Body, Controller, Delete, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
+import {
+  PaginationOptions,
+  paginationOptionsSchema,
+} from '../common/pagination-options.schema';
 import { ZodPipe } from '../common/zod.pipe';
 import { NewPassword, newPasswordSchema } from './schemas/new-password.schema';
 import { NewUser, newUserSchema } from './schemas/new-user.schema';
@@ -12,6 +24,13 @@ export class UsersController {
   @Post()
   async createUser(@Body(new ZodPipe(newUserSchema)) data: NewUser) {
     return this.usersService.createUser(data);
+  }
+
+  @Get()
+  async listUsers(
+    @Query(new ZodPipe(paginationOptionsSchema)) opts: PaginationOptions,
+  ) {
+    return this.usersService.listUsers(opts);
   }
 
   @Post(':userId/username')
