@@ -2,7 +2,7 @@
   "name": "nestjs-template",
   "version": "0.1.0",
   "private": true,
-  "packageManager": "pnpm@10.4.0+sha512.6b849d0787d97f8f4e1f03a9b8ff8f038e79e153d6f11ae539ae7c435ff9e796df6a862c991502695c7f9e8fac8aeafc1ac5a8dab47e36148d183832d886dd52",
+  "packageManager": "pnpm@10.4.1+sha512.c753b6c3ad7afa13af388fa6d808035a008e30ea9993f58c6663e2bc5ff21679aa834db094987129aa4d488b86df57f7b634981b2f827cdcacc698cc0cfb88af",
   "scripts": {
     "build": "nest build",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -24,12 +24,12 @@
   },
   "dependencies": {
     "@mikro-orm/core": "^6.4.6",
-    "@mikro-orm/nestjs": "^6.1.0",
+    "@mikro-orm/nestjs": "^6.1.1",
     "@mikro-orm/postgresql": "^6.4.6",
-    "@nestjs/common": "^11.0.9",
+    "@nestjs/common": "^11.0.10",
     "@nestjs/config": "^4.0.0",
-    "@nestjs/core": "^11.0.9",
-    "@nestjs/platform-express": "^11.0.9",
+    "@nestjs/core": "^11.0.10",
+    "@nestjs/platform-express": "^11.0.10",
     "@nestjs/serve-static": "^5.0.2",
     "argon2": "^0.41.1",
     "cookie-parser": "^1.4.7",
@@ -41,9 +41,9 @@
   "devDependencies": {
     "@eslint/js": "^9.20.0",
     "@mikro-orm/cli": "^6.4.6",
-    "@nestjs/cli": "^11.0.2",
-    "@nestjs/schematics": "^11.0.0",
-    "@nestjs/testing": "^11.0.9",
+    "@nestjs/cli": "^11.0.4",
+    "@nestjs/schematics": "^11.0.1",
+    "@nestjs/testing": "^11.0.10",
     "@tsconfig/node22": "^22.0.0",
     "@types/cookie-parser": "^1.4.8",
     "@types/express": "^5.0.0",
@@ -59,7 +59,7 @@
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.7.3",
-    "typescript-eslint": "^8.24.0"
+    "typescript-eslint": "^8.24.1"
   },
   "jest": {
     "moduleFileExtensions": [
