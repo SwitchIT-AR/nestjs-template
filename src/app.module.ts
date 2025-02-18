@@ -24,7 +24,14 @@ import { UsersModule } from './users/users.module';
         clientUrl: configService.getOrThrow('DATABASE_URL'),
       }),
     }),
-    UsersModule,
+    UsersModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        initialUser: configService.get<string>('INITIAL_USER'),
+        initialPassword: configService.get<string>('INITIAL_PASSWORD'),
+      }),
+    }),
     AuthModule,
   ],
 })

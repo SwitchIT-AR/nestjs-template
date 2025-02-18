@@ -4,6 +4,7 @@ import {
 } from '@mikro-orm/postgresql';
 import {
   ConflictException,
+  Inject,
   Injectable,
   Logger,
   NotFoundException,
@@ -14,20 +15,35 @@ import { User } from './domain/user.entity';
 import { NewPassword } from './schemas/new-password.schema';
 import { NewUser } from './schemas/new-user.schema';
 import { NewUsername } from './schemas/new-username.schema';
+import {
+  MODULE_OPTIONS_TOKEN,
+  UsersModuleOptions,
+} from './users.module-definition';
 
 @Injectable()
 export class UsersService implements OnApplicationBootstrap {
   private readonly logger = new Logger(UsersService.name);
 
-  constructor(private readonly em: EntityManager) {}
+  constructor(
+    @Inject(MODULE_OPTIONS_TOKEN) private readonly options: UsersModuleOptions,
+    private readonly em: EntityManager,
+  ) {}
 
   async onApplicationBootstrap() {
     const em = this.em.fork();
     const count = await em.count(User);
     if (count > 0) return;
-    const user = await User.create({ username: 'admin', password: 'admin' });
+
+    const username = this.options.initialUser ?? 'admin';
+    const password = this.options.initialPassword;
+    if (!password)
+      return this.logger.warn(
+        'No users in database; please set INITIAL_PASSWORD to add an initial user',
+      );
+
+    const user = await User.create({ username, password });
     await em.persist(user).flush();
-    this.logger.log("No users in database; inserted default 'admin' user");
+    this.logger.log('No users in database; inserted initial user');
   }
 
   async createUser(data: NewUser) {
