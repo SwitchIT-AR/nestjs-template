@@ -32,7 +32,13 @@ import { UsersModule } from './users/users.module';
         initialPassword: configService.get<string>('INITIAL_PASSWORD'),
       }),
     }),
-    AuthModule,
+    AuthModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        useSecureCookies: configService.get('NODE_ENV') === 'production',
+      }),
+    }),
   ],
 })
 export class AppModule {}
