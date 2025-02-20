@@ -24,10 +24,11 @@ export class Session extends TimestampedEntity {
   constructor(props: SessionProps) {
     super();
     this.user = ref(props.user);
-    this.expireAt = new Date(Date.now() + 8 * 3600 * 1000);
+    this.expireAt = props.expireAt;
   }
 }
 
 interface SessionProps {
   readonly user: User;
+  readonly expireAt: Date;
 }

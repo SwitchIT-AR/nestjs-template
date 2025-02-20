@@ -37,6 +37,7 @@ import { UsersModule } from './users/users.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
         useSecureCookies: configService.get('NODE_ENV') === 'production',
+        sessionMaxAge: Number(configService.get('SESSION_MAX_AGE')),
       }),
     }),
   ],

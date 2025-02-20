@@ -5,4 +5,5 @@ export const { MODULE_OPTIONS_TOKEN, ConfigurableModuleClass } =
 
 export interface AuthModuleOptions {
   readonly useSecureCookies?: boolean;
+  readonly sessionMaxAge?: number;
 }
