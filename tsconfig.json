@@ -4,6 +4,7 @@
     "forceConsistentCasingInFileNames": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "noImplicitOverride": true,
     "outDir": "dist"
   }
 }
