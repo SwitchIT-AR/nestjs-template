@@ -4,38 +4,39 @@ import {
 } from '@mikro-orm/postgresql';
 import {
   ConflictException,
-  Inject,
   Injectable,
   Logger,
   NotFoundException,
   OnApplicationBootstrap,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PaginationOptions } from '../common/pagination-options.schema';
 import { User } from './domain/user.entity';
 import { NewPassword } from './schemas/new-password.schema';
 import { NewUser } from './schemas/new-user.schema';
 import { NewUsername } from './schemas/new-username.schema';
-import {
-  MODULE_OPTIONS_TOKEN,
-  UsersModuleOptions,
-} from './users.module-definition';
 
 @Injectable()
 export class UsersService implements OnApplicationBootstrap {
   private readonly logger = new Logger(UsersService.name);
+  private readonly initialUser?: string;
+  private readonly initialPassword?: string;
 
   constructor(
-    @Inject(MODULE_OPTIONS_TOKEN) private readonly options: UsersModuleOptions,
     private readonly em: EntityManager,
-  ) {}
+    configService: ConfigService,
+  ) {
+    this.initialUser = configService.get<string>('INITIAL_USER');
+    this.initialPassword = configService.get<string>('INITIAL_PASSWORD');
+  }
 
   async onApplicationBootstrap() {
     const em = this.em.fork();
     const count = await em.count(User);
     if (count > 0) return;
 
-    const username = this.options.initialUser ?? 'admin';
-    const password = this.options.initialPassword;
+    const username = this.initialUser ?? 'admin';
+    const password = this.initialPassword;
     if (!password)
       return this.logger.warn(
         'No users in database; please set INITIAL_PASSWORD to add an initial user',

@@ -1,10 +1,7 @@
-import { Body, Controller, Get, Inject, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import { ZodPipe } from '../common/zod.pipe';
-import {
-  AuthModuleOptions,
-  MODULE_OPTIONS_TOKEN,
-} from './auth.module-definition';
 import { AuthService } from './auth.service';
 import { Public } from './decorators/public.decorator';
 import { Session } from './decorators/session.decorator';
@@ -13,10 +10,14 @@ import { LoginData, loginDataSchema } from './schemas/login-data.schema';
 
 @Controller()
 export class AuthController {
+  private readonly useSecureCookies: boolean;
+
   constructor(
-    @Inject(MODULE_OPTIONS_TOKEN) private readonly options: AuthModuleOptions,
     private readonly authService: AuthService,
-  ) {}
+    configService: ConfigService,
+  ) {
+    this.useSecureCookies = configService.get('NODE_ENV') === 'production';
+  }
 
   @Public()
   @Post('login')
@@ -26,7 +27,7 @@ export class AuthController {
   ) {
     const session = await this.authService.login(data);
     response.cookie('sid', session.id, {
-      secure: this.options.useSecureCookies,
+      secure: this.useSecureCookies,
       expires: session.expireAt,
       httpOnly: true,
       sameSite: 'lax',

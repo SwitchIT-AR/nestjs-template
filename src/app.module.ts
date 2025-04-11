@@ -24,22 +24,8 @@ import { UsersModule } from './users/users.module';
         clientUrl: configService.getOrThrow('DATABASE_URL'),
       }),
     }),
-    UsersModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        initialUser: configService.get<string>('INITIAL_USER'),
-        initialPassword: configService.get<string>('INITIAL_PASSWORD'),
-      }),
-    }),
-    AuthModule.registerAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        useSecureCookies: configService.get('NODE_ENV') === 'production',
-        sessionMaxAge: Number(configService.get('SESSION_MAX_AGE')),
-      }),
-    }),
+    UsersModule,
+    AuthModule,
   ],
 })
 export class AppModule {}

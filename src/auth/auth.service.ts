@@ -1,20 +1,21 @@
 import { EntityManager } from '@mikro-orm/postgresql';
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { UsersAuthService } from '../users/users-auth.service';
-import {
-  AuthModuleOptions,
-  MODULE_OPTIONS_TOKEN,
-} from './auth.module-definition';
 import { Session } from './domain/session.entity';
 import { LoginData } from './schemas/login-data.schema';
 
 @Injectable()
 export class AuthService {
+  private readonly sessionMaxAge: number;
+
   constructor(
-    @Inject(MODULE_OPTIONS_TOKEN) private readonly options: AuthModuleOptions,
     private readonly usersAuthService: UsersAuthService,
     private readonly em: EntityManager,
-  ) {}
+    configService: ConfigService,
+  ) {
+    this.sessionMaxAge = Number(configService.get('SESSION_MAX_AGE'));
+  }
 
   async login(data: LoginData) {
     if (data.password.length > 128) throw new UnauthorizedException();
@@ -22,7 +23,7 @@ export class AuthService {
     if (user === null) throw new UnauthorizedException();
     const isValidPassword = await user.verifyPassword(data.password);
     if (!isValidPassword) throw new UnauthorizedException();
-    const maxAge = (this.options.sessionMaxAge ?? 8 * 3600) * 1000;
+    const maxAge = (this.sessionMaxAge ?? 8 * 3600) * 1000;
     const expireAt = new Date(Date.now() + maxAge);
     const session = new Session({ user, expireAt });
     await this.em.persist(session).flush();
