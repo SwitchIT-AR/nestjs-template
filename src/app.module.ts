@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import * as path from 'node:path';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import * as path from 'node:path';
         clientUrl: configService.getOrThrow('DATABASE_URL'),
       }),
     }),
+    UsersModule,
   ],
 })
 export class AppModule {}
