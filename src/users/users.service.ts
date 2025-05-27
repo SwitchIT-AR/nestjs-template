@@ -11,6 +11,8 @@ import {
 import { User } from './entities/user.entity';
 import { PasswordService } from './password.service';
 import { NewUser } from './schemas/new-user.schema';
+import { PasswordUpdate } from './schemas/password-update.schema';
+import { ProfileUpdate } from './schemas/profile-update.schema';
 import { UsersRepository } from './users.repository';
 
 @Injectable()
@@ -42,6 +44,21 @@ export class UsersService {
     const user = await this.usersRepository.findOneById(userId);
     if (user === null) throw new NotFoundException();
     return user;
+  }
+
+  async updateProfile(userId: string, update: ProfileUpdate) {
+    const user = await this.usersRepository.findOneById(userId);
+    if (user === null) throw new NotFoundException();
+    user.updateProfile(update);
+    await this.em.flush();
+  }
+
+  async updatePassword(userId: string, update: PasswordUpdate) {
+    const user = await this.usersRepository.findOneById(userId);
+    if (user === null) throw new NotFoundException();
+    const passwordHash = await this.passwordService.hash(update.password);
+    user.updatePassword(passwordHash);
+    await this.em.flush();
   }
 
   async disableUser(userId: string) {
