@@ -15,6 +15,7 @@ export class UsersRepository {
       {
         offset: (opts.page - 1) * opts.limit,
         limit: opts.limit,
+        orderBy: { username: 'ASC' },
       },
     );
     return { total, items };
