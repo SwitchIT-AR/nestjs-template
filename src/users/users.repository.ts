@@ -9,10 +9,14 @@ export class UsersRepository {
 
   async findAll(opts: PaginationOptions) {
     const total = await this.em.count(User);
-    const items = await this.em.findAll(User, {
-      offset: (opts.page - 1) * opts.limit,
-      limit: opts.limit,
-    });
+    const items = await this.em.find(
+      User,
+      { username: { $ne: 'root' } },
+      {
+        offset: (opts.page - 1) * opts.limit,
+        limit: opts.limit,
+      },
+    );
     return { total, items };
   }
 
