@@ -57,7 +57,13 @@ export class UsersService implements OnApplicationBootstrap {
     const user = await this.usersRepository.findOneById(userId);
     if (user === null) throw new NotFoundException();
     user.updateProfile(update);
-    await this.em.flush();
+    try {
+      await this.em.persist(user).flush();
+    } catch (err: unknown) {
+      if (err instanceof UniqueConstraintViolationException)
+        throw new ConflictException('Username is already in use');
+      throw err;
+    }
   }
 
   async updatePassword(userId: string, update: PasswordUpdate) {
