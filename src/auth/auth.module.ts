@@ -4,6 +4,10 @@ import {
   AuthenticationGuard,
   AuthenticationGuardProvider,
 } from './authentication.guard';
+import {
+  AuthorizationGuard,
+  AuthorizationGuardProvider,
+} from './authorization.guard';
 import { SessionsRepository } from './sessions.repository';
 
 @Module({
@@ -12,6 +16,8 @@ import { SessionsRepository } from './sessions.repository';
     AuthService,
     AuthenticationGuard,
     AuthenticationGuardProvider,
+    AuthorizationGuard,
+    AuthorizationGuardProvider,
   ],
 })
 export class AuthModule {}
