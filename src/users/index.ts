@@ -1,3 +1,4 @@
+export { MAX_PASSWORD_LENGTH } from './constants';
 export { User } from './entities/user.entity';
 export { PasswordService } from './password.service';
 export { UsersModule } from './users.module';
