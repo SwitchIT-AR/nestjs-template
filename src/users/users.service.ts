@@ -2,14 +2,20 @@ import {
   EntityManager,
   UniqueConstraintViolationException,
 } from '@mikro-orm/postgresql';
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { User } from './entities/user.entity';
 import { PasswordService } from './password.service';
 import { NewUser } from './schemas/new-user.schema';
+import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
   constructor(
+    private readonly usersRepository: UsersRepository,
     private readonly passwordService: PasswordService,
     private readonly em: EntityManager,
   ) {}
@@ -25,5 +31,19 @@ export class UsersService {
         throw new ConflictException('Username is already in use');
       throw err;
     }
+  }
+
+  async disableUser(userId: string) {
+    const user = await this.usersRepository.findOneById(userId);
+    if (user === null) throw new NotFoundException();
+    user.disable();
+    await this.em.flush();
+  }
+
+  async restoreUser(userId: string) {
+    const user = await this.usersRepository.findOneById(userId);
+    if (user === null) throw new NotFoundException();
+    user.restore();
+    await this.em.flush();
   }
 }
