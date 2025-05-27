@@ -8,8 +8,7 @@ export class UsersRepository {
   constructor(private readonly em: EntityManager) {}
 
   async findAll(opts: PaginationOptions) {
-    const total = await this.em.count(User);
-    const items = await this.em.find(
+    const [items, total] = await this.em.findAndCount(
       User,
       { username: { $ne: 'root' } },
       {
