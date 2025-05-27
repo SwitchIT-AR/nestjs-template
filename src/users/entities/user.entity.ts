@@ -1,4 +1,13 @@
-import { Entity, Enum, PrimaryKey, Property } from '@mikro-orm/core';
+import { Session } from '@/auth';
+import {
+  Cascade,
+  Collection,
+  Entity,
+  Enum,
+  OneToMany,
+  PrimaryKey,
+  Property,
+} from '@mikro-orm/core';
 import * as uuid from 'uuid';
 import { Role } from './role.enum';
 
@@ -12,6 +21,11 @@ export class User {
 
   @Property({ type: 'timestamptz', onUpdate: () => new Date() })
   readonly updatedAt: Date = new Date();
+
+  @OneToMany(() => Session, (session) => session.user, {
+    cascade: [Cascade.ALL],
+  })
+  readonly sessions: Collection<Session> = new Collection<Session>(this);
 
   @Property({ type: 'timestamptz', nullable: true })
   disabledAt: Date | null = null;
