@@ -46,8 +46,8 @@ export class User {
   }
 
   updateProfile(update: ProfileUpdate) {
-    if (update.username) this.username = update.username;
-    if (update.role) this.role = update.role;
+    this.username = update.username;
+    this.role = update.role;
   }
 
   updatePassword(passwordHash: string) {
@@ -72,4 +72,4 @@ export class User {
 }
 
 export type UserProps = Pick<User, 'username' | 'passwordHash' | 'role'>;
-export type ProfileUpdate = Partial<Pick<User, 'username' | 'role'>>;
+export type ProfileUpdate = Pick<User, 'username' | 'role'>;
