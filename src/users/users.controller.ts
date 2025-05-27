@@ -11,10 +11,19 @@ import {
   Delete,
   Get,
   Param,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
 import { NewUser, newUserSchema } from './schemas/new-user.schema';
+import {
+  PasswordUpdate,
+  passwordUpdateSchema,
+} from './schemas/password-update.schema';
+import {
+  ProfileUpdate,
+  profileUpdateSchema,
+} from './schemas/profile-update.schema';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -39,6 +48,24 @@ export class UsersController {
   @RequirePermission('users:show')
   async getUser(@Param('userId', UuidPipe) userId: string) {
     return this.usersService.getUser(userId);
+  }
+
+  @Patch(':userId/profile')
+  @RequirePermission('users:update-profile')
+  async updateProfile(
+    @Param('userId', UuidPipe) userId: string,
+    @Body(new ZodPipe(profileUpdateSchema)) update: ProfileUpdate,
+  ) {
+    return this.usersService.updateProfile(userId, update);
+  }
+
+  @Patch(':userId/password')
+  @RequirePermission('users:update-password')
+  async updatePassword(
+    @Param('userId', UuidPipe) userId: string,
+    @Body(new ZodPipe(passwordUpdateSchema)) update: PasswordUpdate,
+  ) {
+    return this.usersService.updatePassword(userId, update);
   }
 
   @Post(':userId/disable')
