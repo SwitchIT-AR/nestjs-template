@@ -46,4 +46,12 @@ export class UsersService {
     user.restore();
     await this.em.flush();
   }
+
+  async deleteUser(userId: string) {
+    const user = await this.usersRepository.findOneById(userId);
+    if (user === null) throw new NotFoundException();
+    if (user.isActive())
+      throw new ConflictException('User must be disabled before removal');
+    await this.em.remove(user).flush();
+  }
 }

@@ -47,6 +47,10 @@ export class User {
   restore() {
     this.disabledAt = null;
   }
+
+  isActive() {
+    return this.disabledAt === null;
+  }
 }
 
 export type UserProps = Pick<User, 'username' | 'passwordHash' | 'role'>;
