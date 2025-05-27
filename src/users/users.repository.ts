@@ -19,4 +19,8 @@ export class UsersRepository {
   async findOneById(id: string) {
     return this.em.findOne(User, { id });
   }
+
+  async findOneByUsername(username: string) {
+    return this.em.findOne(User, { username });
+  }
 }
