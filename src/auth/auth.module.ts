@@ -1,5 +1,6 @@
 import { UsersModule } from '@/users';
 import { Module } from '@nestjs/common';
+import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import {
   AuthenticationGuard,
@@ -13,6 +14,7 @@ import { SessionsRepository } from './sessions.repository';
 
 @Module({
   imports: [UsersModule],
+  controllers: [AuthController],
   providers: [
     SessionsRepository,
     AuthService,
