@@ -33,6 +33,12 @@ export class UsersService {
     }
   }
 
+  async getUser(userId: string) {
+    const user = await this.usersRepository.findOneById(userId);
+    if (user === null) throw new NotFoundException();
+    return user;
+  }
+
   async disableUser(userId: string) {
     const user = await this.usersRepository.findOneById(userId);
     if (user === null) throw new NotFoundException();
