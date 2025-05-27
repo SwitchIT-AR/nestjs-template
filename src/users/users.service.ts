@@ -1,3 +1,4 @@
+import { PaginationOptions } from '@/common/pagination-options.schema';
 import {
   EntityManager,
   UniqueConstraintViolationException,
@@ -31,6 +32,10 @@ export class UsersService {
         throw new ConflictException('Username is already in use');
       throw err;
     }
+  }
+
+  async listUsers(opts: PaginationOptions) {
+    return this.usersRepository.findAll(opts);
   }
 
   async getUser(userId: string) {
