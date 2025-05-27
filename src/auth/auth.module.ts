@@ -1,3 +1,4 @@
+import { UsersModule } from '@/users';
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
@@ -11,6 +12,7 @@ import {
 import { SessionsRepository } from './sessions.repository';
 
 @Module({
+  imports: [UsersModule],
   providers: [
     SessionsRepository,
     AuthService,
