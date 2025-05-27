@@ -51,6 +51,10 @@ export class User {
   isActive() {
     return this.disabledAt === null;
   }
+
+  isDisabled() {
+    return this.disabledAt !== null;
+  }
 }
 
 export type UserProps = Pick<User, 'username' | 'passwordHash' | 'role'>;
