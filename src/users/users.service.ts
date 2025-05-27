@@ -6,8 +6,12 @@ import {
 import {
   ConflictException,
   Injectable,
+  Logger,
   NotFoundException,
+  OnApplicationBootstrap,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Role } from './entities/role.enum';
 import { User } from './entities/user.entity';
 import { PasswordService } from './password.service';
 import { NewUser } from './schemas/new-user.schema';
@@ -16,8 +20,11 @@ import { ProfileUpdate } from './schemas/profile-update.schema';
 import { UsersRepository } from './users.repository';
 
 @Injectable()
-export class UsersService {
+export class UsersService implements OnApplicationBootstrap {
+  private readonly logger: Logger = new Logger(this.constructor.name);
+
   constructor(
+    private readonly configService: ConfigService,
     private readonly usersRepository: UsersRepository,
     private readonly passwordService: PasswordService,
     private readonly em: EntityManager,
@@ -81,5 +88,20 @@ export class UsersService {
     if (user.isActive())
       throw new ConflictException('User must be disabled before removal');
     await this.em.remove(user).flush();
+  }
+
+  async onApplicationBootstrap() {
+    // Must fork outside request context.
+    const em = this.em.fork();
+    const repository = new UsersRepository(em);
+
+    const password = this.configService.getOrThrow<string>('ROOT_PASSWORD');
+    const existingUser = await repository.findOneByUsername('root');
+    if (existingUser !== null) return;
+
+    this.logger.log('Creating root user...');
+    const passwordHash = await this.passwordService.hash(password);
+    const user = new User({ username: 'root', role: Role.Admin, passwordHash });
+    await em.persist(user).flush();
   }
 }
