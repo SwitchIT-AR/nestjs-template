@@ -32,4 +32,12 @@ export class AuthService {
     await this.em.persist(session).flush();
     return session;
   }
+
+  async logout(session: Session) {
+    await this.em.remove(session).flush();
+  }
+
+  async getCurrentUser(session: Session) {
+    return session.user.loadOrFail();
+  }
 }
