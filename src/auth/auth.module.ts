@@ -1,4 +1,7 @@
 import { Module } from '@nestjs/common';
+import { SessionsRepository } from './sessions.repository';
 
-@Module({})
+@Module({
+  providers: [SessionsRepository],
+})
 export class AuthModule {}
